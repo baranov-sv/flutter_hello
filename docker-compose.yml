@@ -1,0 +1,11 @@
+version: "3.2"
+services:
+  app:
+    restart: always
+    image: cirrusci/flutter:stable
+    environment:
+      PUB_CACHE: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    tty: true
+    stdin_open: true
