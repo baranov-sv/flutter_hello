@@ -4,8 +4,26 @@ services:
     restart: always
     image: cirrusci/flutter:stable
     environment:
-      PUB_CACHE: /usr/src/app
+      PUB_CACHE: /usr/src/app/.pub-cache
+    working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
     tty: true
     stdin_open: true
+
+
+# Workaround for using host device/emulator on MacOS from container (because docker cant't mount usb on MacOS)
+# 
+# On host
+# Forward host port 30000 to device port 50000 for connecting to VM Service
+# adb -s 85HABM72V97K forward tcp:30000 tcp:50000
+
+# In container
+# Forward adb port to host adb server
+# ssh -T -N -f -4 -L5037:localhost:5037 serge@host.docker.internal
+# 
+# Forward vm service port to host
+# ssh -T -N -f -4 -L30000:localhost:30000 serge@host.docker.internal
+# 
+# Run flutter app wih --host-vmservice-port
+# flutter run --host-vmservice-port=30000
